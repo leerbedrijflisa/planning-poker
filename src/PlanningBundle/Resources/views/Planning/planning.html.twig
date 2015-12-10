@@ -28,17 +28,5 @@
                 <h3><i class="fa fa-fw fa-tag"></i> Ticket: {{ group.activeTicket.description }}</h3>
             </div>
         </div>
-        <hr>
-        <div class="row">
-            {% for card in cards %}
-                <div class="col-md-4">
-                    <div class="panel panel-default">
-                        <div class="panel-body text-center">
-                            <h3>{{ card.points }}</h3>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
     {% endif %}
 {% endblock %}
