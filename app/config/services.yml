@@ -4,8 +4,3 @@ parameters:
 #    parameter_name: value
 
 services:
-    app.twig.cards_extension:
-        class: PlanningBundle\Twig\Extension\CardsExtension
-        arguments: [@service_container]
-        tags:
-            - { name: twig.extension }

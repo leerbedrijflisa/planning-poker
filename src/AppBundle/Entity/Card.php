@@ -28,6 +28,12 @@ class Card
      */
     private $points;
 
+    /**
+     * @var PlanningGroup
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\PlanningGroup", inversedBy="cards")
+     */
+    private $group;
 
     /**
      * Get id
@@ -62,5 +68,28 @@ class Card
     {
         return $this->points;
     }
-}
 
+    /**
+     * Set group
+     *
+     * @param \AppBundle\Entity\PlanningGroup $group
+     *
+     * @return Card
+     */
+    public function setGroup(\AppBundle\Entity\PlanningGroup $group = null)
+    {
+        $this->group = $group;
+
+        return $this;
+    }
+
+    /**
+     * Get group
+     *
+     * @return \AppBundle\Entity\PlanningGroup
+     */
+    public function getGroup()
+    {
+        return $this->group;
+    }
+}

@@ -45,11 +45,19 @@ class PlanningGroup
     private $tickets;
 
     /**
+     * @var ArrayCollection | Card[]
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Card", mappedBy="group")
+     */
+    private $cards;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
+        $this->cards = new ArrayCollection();
     }
 
     /**
@@ -199,4 +207,38 @@ class PlanningGroup
         return $this->tickets->matching($criteria);
     }
 
+
+    /**
+     * Add card
+     *
+     * @param \AppBundle\Entity\Card $card
+     *
+     * @return PlanningGroup
+     */
+    public function addCard(\AppBundle\Entity\Card $card)
+    {
+        $this->cards[] = $card;
+
+        return $this;
+    }
+
+    /**
+     * Remove card
+     *
+     * @param \AppBundle\Entity\Card $card
+     */
+    public function removeCard(\AppBundle\Entity\Card $card)
+    {
+        $this->cards->removeElement($card);
+    }
+
+    /**
+     * Get cards
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCards()
+    {
+        return $this->cards;
+    }
 }
