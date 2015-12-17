@@ -12,7 +12,7 @@
                 <td>{{ group.name }}</td>
                 <td>{{ group.token }}</td>
                 <td class="text-center">
-                    <a href="#" class="btn btn-sm btn-primary">
+                    <a href="{{ path('join_planning_group', {'token': group.token}) }}" class="btn btn-sm btn-primary">
                         <i class="fa fa-fw fa-users"></i> JOINUH
                     </a>
                 </td>

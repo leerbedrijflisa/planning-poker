@@ -2,9 +2,11 @@
 
 namespace PlanningBundle\Controller;
 
+use AppBundle\Entity\Card;
 use AppBundle\Entity\PlanningGroup;
 use AppBundle\Entity\Ticket;
 use PlanningBundle\Form\TicketType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -19,6 +21,11 @@ class PlanningController extends Controller
      */
     public function planningAction(Request $request, PlanningGroup $group)
     {
+        if (!$this->get('planning_session')->validate($group)) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $session = $this->get('planning_session')->getSession();
         $ticket = new Ticket();
 
         $form = $this->createForm(new TicketType(), $ticket);
@@ -38,7 +45,28 @@ class PlanningController extends Controller
         return array(
             'form'  => $form->createView(),
             'group' => $group,
+            'session' => $session
         );
+    }
+
+    /**
+     * @Route("/planning/{token}/card/{id}/select", name="planning_card_select")
+     * @ParamConverter("group", class="AppBundle:PlanningGroup", options={"mapping": {"token": "token"}})
+     * @ParamConverter("card", class="AppBundle:Card", options={"mapping": {"id": "id"}})
+     */
+    public function selectCardAction(PlanningGroup $group, Card $card)
+    {
+        if (!$this->get('planning_session')->validate($group)) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $session = $this->get('planning_session')->getSession();
+
+        $this->container->get('card_service')->toggleCardSelection($session, $card);
+
+        return $this->redirectToRoute('planning', array(
+            'token' => $group->getToken()
+        ));
     }
 
 }
