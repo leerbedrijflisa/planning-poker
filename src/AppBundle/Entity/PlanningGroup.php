@@ -2,7 +2,9 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Card;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -211,11 +213,11 @@ class PlanningGroup
     /**
      * Add card
      *
-     * @param \AppBundle\Entity\Card $card
+     * @param Card $card
      *
      * @return PlanningGroup
      */
-    public function addCard(\AppBundle\Entity\Card $card)
+    public function addCard(Card $card)
     {
         $this->cards[] = $card;
 
@@ -225,9 +227,9 @@ class PlanningGroup
     /**
      * Remove card
      *
-     * @param \AppBundle\Entity\Card $card
+     * @param Card $card
      */
-    public function removeCard(\AppBundle\Entity\Card $card)
+    public function removeCard(Card $card)
     {
         $this->cards->removeElement($card);
     }
@@ -235,7 +237,7 @@ class PlanningGroup
     /**
      * Get cards
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection|Card[]
      */
     public function getCards()
     {

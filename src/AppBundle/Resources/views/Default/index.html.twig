@@ -1,0 +1,22 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <table class="table">
+        <tr>
+            <th>Groep</th>
+            <th>Token</th>
+            <th></th>
+        </tr>
+        {% for group in groups %}
+            <tr>
+                <td>{{ group.name }}</td>
+                <td>{{ group.token }}</td>
+                <td class="text-center">
+                    <a href="#" class="btn btn-sm btn-primary">
+                        <i class="fa fa-fw fa-users"></i> JOINUH
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

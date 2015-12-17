@@ -4,3 +4,18 @@ parameters:
 #    parameter_name: value
 
 services:
+
+    group_service:
+        class: GroupBundle\Services\GroupService
+        calls:
+            - [ setContainer, [ @service_container ] ]
+
+    card_service:
+        class: CardBundle\Services\CardService
+        calls:
+            - [ setContainer, [ @service_container ] ]
+
+    planning_session:
+        class: PlanningBundle\Services\PlanningSession
+        calls:
+            - [ setContainer, [ @service_container ] ]

@@ -18,6 +18,8 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new AppBundle\AppBundle(),
             new PlanningBundle\PlanningBundle(),
+            new GroupBundle\GroupBundle(),
+            new CardBundle\CardBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
