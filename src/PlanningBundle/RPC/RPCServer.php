@@ -21,22 +21,19 @@ class RPCServer extends ContainerAware implements RpcInterface
         ));
 
 
+        $stmt = $this->container->get('database_connection')->prepare("SELECT * FROM user_session WHERE planning_group_id = :planning_group_id AND selected_card_id IS NOT NULL");
+        $stmt->bindValue('planning_group_id', $group->getId(), \PDO::PARAM_INT);
+        $stmt->execute();
+        $selectedSessions = $stmt->rowCount();
+
         $stmt = $this->container->get('database_connection')->prepare("SELECT * FROM user_session WHERE planning_group_id = :planning_group_id");
         $stmt->bindValue('planning_group_id', $group->getId(), \PDO::PARAM_INT);
         $stmt->execute();
-        $result = $stmt->fetchAll();
-
-        $selectedSessions = 0;
-        foreach ($result as $session) {
-            if (null !== $session['selected_card_id']) {
-                $selectedSessions++;
-            }
-        }
-
+        $allSessions = $stmt->rowCount();
 
         return array(
             "result" => array(
-                'reveal' => (count($group->getSessions()) == $selectedSessions),
+                'reveal' => ($allSessions == $selectedSessions),
                 'ses' => count($group->getSessions()),
                 'sel' => $selectedSessions
             ),
