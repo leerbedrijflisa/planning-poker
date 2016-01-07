@@ -6,7 +6,7 @@ $(function () {
     }
 
 
-    var webSocket = WS.connect("ws://127.0.0.1:8080");
+    var webSocket = WS.connect("ws://h2512749.stratoserver.net:8000");
 
     webSocket.on("socket/connect", function (session) {
         //session is an Autobahn JS WAMP session.
