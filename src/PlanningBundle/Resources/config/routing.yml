@@ -1,0 +1,7 @@
+pp_rpc:
+    channel: "pp/{method}"
+    handler:
+        callback: 'pp.server'
+    requirements:
+            method:
+                pattern: "[a-z_]+"

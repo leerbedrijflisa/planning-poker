@@ -28,7 +28,7 @@ class UserSession
     private $token;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\PlanningGroup")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\PlanningGroup", inversedBy="sessions")
      */
     private $planningGroup;
 

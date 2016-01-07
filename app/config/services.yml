@@ -4,7 +4,6 @@ parameters:
 #    parameter_name: value
 
 services:
-
     group_service:
         class: GroupBundle\Services\GroupService
         calls:
@@ -19,3 +18,17 @@ services:
         class: PlanningBundle\Services\PlanningSession
         calls:
             - [ setContainer, [ @service_container ] ]
+
+    session.handler.pdo:
+            class:     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
+            public:    false
+            arguments:
+                - 'mysql:dbname=planning-poker'
+                - { db_username: root, db_password: develop }
+
+    pp.server:
+        class: PlanningBundle\RPC\RPCServer
+        calls:
+            - [ setContainer, [ @service_container ] ]
+        tags:
+            - { name: gos_web_socket.rpc }
