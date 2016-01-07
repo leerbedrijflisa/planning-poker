@@ -1,0 +1,38 @@
+.row.card-selection div[class*="col-"]{
+    padding: 5px;
+}
+
+.card-panel {
+    height: 300px;
+}
+
+.card-panel .panel-body {
+    height: 100%;
+    padding: 0;
+}
+
+.card-panel .panel-body h3{
+    line-height: 300px;
+    margin: 0;
+}
+
+.card-panel * {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: #000000;
+}
+
+.card-panel:hover {
+    cursor: pointer;
+}
+
+.card-selected {
+    background-color: #97b1ff;
+    border-color: #8197db;
+}
+
+.card-selected * {
+    color: #ffffff;
+}

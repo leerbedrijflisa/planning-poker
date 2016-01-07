@@ -6,6 +6,7 @@
         {% block stylesheets %}
             {% stylesheets
             'css/*.min.css'
+            'css/style.css'
             filter='cssrewrite' %}
             <link rel="stylesheet" href="{{ asset_url }}"/>
             {% endstylesheets %}
@@ -21,9 +22,12 @@
         </div>
         {% block javascripts %}
             {% javascripts
-            'js/*.min.js' %}
+            'bundles/fosjsrouting/js/router.js'
+            'js/jquery-1.11.3.min.js'
+            'js/bootstrap.min.js' %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
             {% endjavascripts %}
+            <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
         {% endblock %}
     </body>
 </html>

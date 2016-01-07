@@ -10,7 +10,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class PlanningController extends Controller
 {
@@ -50,7 +52,7 @@ class PlanningController extends Controller
     }
 
     /**
-     * @Route("/planning/{token}/card/{id}/select", name="planning_card_select")
+     * @Route("/planning/{token}/card/{id}/select", name="planning_card_select", options={"expose": true})
      * @ParamConverter("group", class="AppBundle:PlanningGroup", options={"mapping": {"token": "token"}})
      * @ParamConverter("card", class="AppBundle:Card", options={"mapping": {"id": "id"}})
      */
@@ -64,8 +66,9 @@ class PlanningController extends Controller
 
         $this->container->get('card_service')->toggleCardSelection($session, $card);
 
-        return $this->redirectToRoute('planning', array(
-            'token' => $group->getToken()
+        return new JsonResponse(array(
+            'group_token' => $group->getToken(),
+            'card_id' => $card->getId()
         ));
     }
 

@@ -29,18 +29,24 @@
             </div>
         </div>
         <hr>
-        <div class="row">
+        <div class="row card-selection">
             {% for card in group.cards %}
-                <div class="col-md-4">
-                    <div class="panel panel-{{- (session.selectedCard is not null and session.selectedCard.id == card.id) ? 'primary' : 'default' -}}">
+                <div class="col-md-2">
+                    <div class="panel panel-default card-panel" data-group-token="{{ group.token }}" data-card-id="{{ card.id }}">
                         <div class="panel-body text-center">
-                            <h3>
-                                <a href="{{ path('planning_card_select', {'token': group.token, 'id': card.id}) }}">{{ card.points }}</a>
-                            </h3>
+                            <h3>{{ card.points }}</h3>
                         </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
     {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+    'js/planning.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}
