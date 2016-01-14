@@ -1,3 +1,13 @@
+@media (max-width: 768px ) {
+    .card-panel {
+        height: 100px !important;
+    }
+
+    .card-panel .panel-body h3{
+        line-height: 100px !important;
+    }
+}
+
 .row.card-selection div[class*="col-"]{
     padding: 5px;
 }
@@ -36,3 +46,4 @@
 .card-selected * {
     color: #ffffff;
 }
+
