@@ -12,22 +12,16 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class PlanningController extends Controller
 {
 
     /**
-     * @Route("/planning/{token}/action", name="planning")
+     * @Route("/planning/{token}", name="planning")
      * @Template()
      */
     public function planningAction(Request $request, PlanningGroup $group)
     {
-        if (!$this->get('planning_session')->validate($group)) {
-            throw $this->createAccessDeniedException();
-        }
-
-        $session = $this->get('planning_session')->getSession();
         $ticket = new Ticket();
 
         $form = $this->createForm(new TicketType(), $ticket);
@@ -47,7 +41,6 @@ class PlanningController extends Controller
         return array(
             'form'  => $form->createView(),
             'group' => $group,
-            'session' => $session
         );
     }
 

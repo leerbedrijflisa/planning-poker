@@ -1,0 +1,7 @@
+pp_rpc:
+    channel: "pp/{method}"
+    handler:
+        callback: 'planning_poker_server'
+    requirements:
+            method:
+                pattern: "[a-z_]+"

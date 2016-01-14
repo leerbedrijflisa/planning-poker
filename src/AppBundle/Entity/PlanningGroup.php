@@ -54,6 +54,13 @@ class PlanningGroup
     private $cards;
 
     /**
+     * @var ArrayCollection | UserSession[]
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\UserSession", mappedBy="planningGroup")
+     */
+    private $sessions;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -242,5 +249,39 @@ class PlanningGroup
     public function getCards()
     {
         return $this->cards;
+    }
+
+    /**
+     * Add session
+     *
+     * @param UserSession $session
+     *
+     * @return PlanningGroup
+     */
+    public function addSession(UserSession $session)
+    {
+        $this->sessions[] = $session;
+
+        return $this;
+    }
+
+    /**
+     * Remove session
+     *
+     * @param UserSession $session
+     */
+    public function removeSession(UserSession $session)
+    {
+        $this->sessions->removeElement($session);
+    }
+
+    /**
+     * Get sessions
+     *
+     * @return Collection | UserSession[]
+     */
+    public function getSessions()
+    {
+        return $this->sessions;
     }
 }

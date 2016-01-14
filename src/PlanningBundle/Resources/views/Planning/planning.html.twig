@@ -45,7 +45,11 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script>
+        var group_token = '{{ group.token }}';
+    </script>
     {% javascripts
+    'js/pp_client.js'
     'js/planning.js' %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
