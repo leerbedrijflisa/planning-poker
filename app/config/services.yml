@@ -19,16 +19,28 @@ services:
         calls:
             - [ setContainer, [ @service_container ] ]
 
-    session.handler.pdo:
-            class:     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
-            public:    false
-            arguments:
-                - 'mysql:dbname=planning-poker'
-                - { db_username: root, db_password: develop }
+    session_manager:
+        class: PlanningBundle\Services\SessionManager
+        calls:
+            - [ setContainer, [ @service_container ] ]
 
-    pp.server:
-        class: PlanningBundle\RPC\RPCServer
+    planning_poker.server:
+        class: PlanningBundle\RPC\PlanningPokerServer
         calls:
             - [ setContainer, [ @service_container ] ]
         tags:
             - { name: gos_web_socket.rpc }
+
+    planning_poker_revelation.topic:
+        arguments:
+            - '@session_manager'
+        class: PlanningBundle\RPC\RevelationTopic
+        tags:
+            - { name: gos_web_socket.topic }
+
+    gos_web_socket_server.client_event.listener:
+        class: PlanningBundle\RPC\ClientEventListener
+        arguments:
+            - '@session_manager'
+        tags:
+            - { name: kernel.event_listener, event: gos_web_socket.client_disconnected, method: onClientDisconnected }

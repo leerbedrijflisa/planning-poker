@@ -1,63 +1,72 @@
-var selected_card;
+var client = new PPClient(),
+    selected_card,
+    group_token = (undefined !== group_token) ? group_token : undefined;
 
-$(function () {
-    if (undefined !== selected_card_id) {
-        selected_card = $('div[data-card-id="' + selected_card_id + '"]');
-    }
+client.onConnect(function (session) {
+    log("Connected to server.");
 
+    client.joinGroup(session, {'group-token': group_token}, function (res) {
+        log('Group joined successfully! Resource Id %s'.replace(/%s/g, res.result.resource_id));
+        session.subscribe('pp/revelation', function (msg, result) {
+            // returns bool if cards have to be revealed
 
-    var webSocket = WS.connect("ws://h2512749.stratoserver.net:8000");
-
-    webSocket.on("socket/connect", function (session) {
-        //session is an Autobahn JS WAMP session.
-
-        console.log("Successfully Connected!");
-        $('.card-panel').click(function () {
-            var _this = $(this),
-                url = Routing.generate('planning_card_select', {
-                    'token': $(this).data('group-token'),
-                    'id': $(this).data('card-id')
-                });
-            $.ajax({
-                url: url,
-                success: function (response) {
-                    session.call(
-                        'pp/select_card',
-                        {
-                            'group-token': $(_this).data('group-token'),
-                            'card-id': $(_this).data('card-id')
-                        })
-                        .then(function (response) {
-                            alert(response.result.reveal ? 'Tonen' : 'Niet tonen');
-                        }, function (err, desc) {
-
-                        });
-                    if (undefined !== selected_card) {
-                        $(selected_card)
-                            .removeClass('card-selected');
-                    }
-
-                    var card = $('div[data-group-token="' + $(_this).data('group-token') + '"][data-card-id="' + $(_this).data('card-id') + '"]');
-
-                    if ($(card).data('card-id') === $(selected_card).data('card-id')) {
-                        $(card)
-                            .removeClass('card-selected');
-                        card = undefined;
-                    }
-
-                    if ($(card).data('card-id') !== $(selected_card).data('card-id')) {
-                        $(card)
-                            .addClass('card-selected');
-                        selected_card = card;
-                    }
-                }
-            });
+            var card = $('div[data-group-token="' + result.group_token + '"][data-card-id="' + result.card_id + '"]');
+            if (undefined !== selected_card) {
+                $(selected_card)
+                    .removeClass('card-selected');
+            }
+            if ($(card).data('card-id') == $(selected_card).data('card-id')) {
+                $(card)
+                    .removeClass('card-selected');
+                card = undefined;
+            }
+            if ($(card).data('card-id') !== $(selected_card).data('card-id')) {
+                $(card)
+                    .addClass('card-selected');
+                selected_card = card;
+            }
+            alert('Card action: ' + result.reveal);
         });
-    });
 
-    webSocket.on("socket/disconnect", function (error) {
-        //error provides us with some insight into the disconnection: error.reason and error.code
+        $('.card-panel').click(function () {
+            // on card click
 
-        console.log("Disconnected for " + error.reason + " with code " + error.code);
+            var _this = $(this),
+                token = $(_this).data('group-token'),
+                card_id = $(_this).data('card-id');
+
+            session.call('pp/select_card', {'group-token': token, 'card-id': card_id}).then(function (res) {
+                // card selection successfull
+
+                session.publish('pp/revelation', {'msg': 'selection'});
+            });
+
+        });
+    }, function (error) {
+        console.error(error.desc);
     });
+});
+
+//var webSocket = WS.connect("ws://127.0.0.1:8000"),
+//    selected_card;
+//
+//webSocket.on("socket/connect", function (session) {
+//    //session is an Autobahn JS WAMP session.
+//
+//    log("Connected to server.");
+//    session.call('pp/join_group', {'group-token': group_token}).then(function (res) {
+//        // successfull group join
+//
+//
+//
+
+//    }, function () {
+//        // Unable to join group
+//
+//        console.error('Unable to join group');
+//    });
+//});
+//
+client.onDisconnect(function (error) {
+    console.error('Error: ' + error.reason);
 });

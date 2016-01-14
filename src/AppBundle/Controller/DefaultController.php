@@ -21,16 +21,4 @@ class DefaultController extends Controller
         );
     }
 
-    /**
-     * @Route("/join/{token}", name="join_planning_group")
-     */
-    public function joinAction(PlanningGroup $group)
-    {
-        $this->container->get('group_service')->join($group);
-
-        return $this->redirectToRoute('planning', array(
-            'token' => $group->getToken()
-        ));
-    }
-
 }

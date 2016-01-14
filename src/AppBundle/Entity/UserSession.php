@@ -23,9 +23,9 @@ class UserSession
     private $id;
 
     /**
-     * @ORM\Column(name="token", type="string", length=255)
+     * @ORM\Column(name="resource_id", type="string", length=255)
      */
-    private $token;
+    private $resourceId;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\PlanningGroup", inversedBy="sessions")
@@ -45,30 +45,6 @@ class UserSession
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set token
-     *
-     * @param string $token
-     *
-     * @return UserSession
-     */
-    public function setToken($token)
-    {
-        $this->token = $token;
-
-        return $this;
-    }
-
-    /**
-     * Get token
-     *
-     * @return string
-     */
-    public function getToken()
-    {
-        return $this->token;
     }
 
     /**
@@ -117,5 +93,29 @@ class UserSession
     public function getSelectedCard()
     {
         return $this->selectedCard;
+    }
+
+    /**
+     * Set resourceId
+     *
+     * @param string $resourceId
+     *
+     * @return UserSession
+     */
+    public function setResourceId($resourceId)
+    {
+        $this->resourceId = $resourceId;
+
+        return $this;
+    }
+
+    /**
+     * Get resourceId
+     *
+     * @return string
+     */
+    public function getResourceId()
+    {
+        return $this->resourceId;
     }
 }
