@@ -34,7 +34,6 @@ class DefaultController extends Controller
         $group = new PlanningGroup();
 
         $form = $this->createForm(new GroupType(), $group);
-
         $form->handleRequest($request);
 
         if ($form->isValid()) {
