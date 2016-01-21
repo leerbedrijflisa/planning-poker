@@ -67,6 +67,8 @@ class PlanningGroup
     {
         $this->tickets = new ArrayCollection();
         $this->cards = new ArrayCollection();
+
+        $this->token = substr(md5(microtime()), -4);
     }
 
     /**
