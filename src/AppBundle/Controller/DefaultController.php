@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Card;
 use AppBundle\Entity\PlanningGroup;
 use GroupBundle\Form\GroupType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -38,6 +39,13 @@ class DefaultController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            for ($i = 0; $i < 6; $i++) {
+                $card = new Card();
+                $card->setPoints($i + 1);
+                $card->setGroup($group);
+
+                $em->persist($card);
+            }
             $em->persist($group);
             $em->flush();
 
