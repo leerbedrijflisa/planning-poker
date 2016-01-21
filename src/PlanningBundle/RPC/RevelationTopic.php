@@ -66,6 +66,7 @@ class RevelationTopic implements TopicInterface
         array $eligible
     ) {
         $session = $this->session_manager->hasSession($connection->resourceId);
+        $sessionCount = $session->getPlanningGroup()->getSessions()->count();
 
         if (null !== $session) {
             $selected = 0;
@@ -78,7 +79,7 @@ class RevelationTopic implements TopicInterface
             $topic->broadcast(array(
                 'group_token' => $session->getPlanningGroup()->getToken(),
                 'card_id' => $session->getSelectedCard()->getId(),
-                'reveal' => $selected == $session->getPlanningGroup()->getSessions()->count()
+                'reveal' => ($sessionCount > 1) ? $selected == $sessionCount : false
             ));
         }
     }
