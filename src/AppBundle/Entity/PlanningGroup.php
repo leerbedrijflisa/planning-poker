@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * PlanningGroup
@@ -29,6 +30,8 @@ class PlanningGroup
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=64)
+     *
+     * @Assert\NotBlank(message="De naam van de groep mag niet blanco zijn.")
      */
     private $name;
 

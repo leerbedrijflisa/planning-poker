@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\PlanningGroup;
+use GroupBundle\Form\GroupType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -32,13 +33,11 @@ class DefaultController extends Controller
     {
         $group = new PlanningGroup();
 
-        $form = $this->createFormBuilder($group)
-            ->add('name', 'text')
-            ->getForm();
+        $form = $this->createForm(new GroupType(), $group);
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($group);
             $em->flush();
