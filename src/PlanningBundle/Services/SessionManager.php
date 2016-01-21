@@ -60,7 +60,11 @@ class SessionManager implements ContainerAwareInterface
     {
         $em = $this->container->get('doctrine')->getManager();
 
-        $session->setSelectedCard($card);
+        if ($session->getSelectedCard() == $card) {
+            $session->setSelectedCard(null);
+        } else {
+            $session->setSelectedCard($card);
+        }
 
         $em->persist($session);
         $em->flush();

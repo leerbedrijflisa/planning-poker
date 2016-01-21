@@ -25,6 +25,11 @@ client.onConnect(function (session) {
                     .addClass('card-selected');
                 selected_card = card;
             }
+            console.log(result);
+            if (true === result.reveal) {
+                console.log('Reveal cards');
+                //$('.card-selection').fadeOut(1000);
+            }
             alert('Card action: ' + result.reveal);
         });
 

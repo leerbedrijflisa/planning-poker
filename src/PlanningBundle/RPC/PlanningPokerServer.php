@@ -46,6 +46,7 @@ class PlanningPokerServer implements RpcInterface, ContainerAwareInterface
         if (null !== $session) {
             $card = $this->container->get('doctrine')->getRepository('AppBundle:Card')->find($params['card-id']);
 
+
             $this->container->get('session_manager')->selectCard($session, $card);
 
             return array(

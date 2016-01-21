@@ -1,5 +1,7 @@
 {% extends '::base.html.twig' %}
 
+{% form_theme form "bootstrap_3_layout.html.twig" %}
+
 {% block pagetitle %}
     {{ group.name }}
 {% endblock %}
@@ -10,7 +12,7 @@
         <div class="row">
             <div class="col-md-12">
                 {{ form_widget(form.description, {'attr': {
-                    'class': 'form-control input-lg'
+                    'class': 'input-lg'
                 }}) }}
             </div>
         </div>

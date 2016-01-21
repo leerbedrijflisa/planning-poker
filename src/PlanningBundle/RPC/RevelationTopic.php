@@ -7,6 +7,10 @@ use Gos\Bundle\WebSocketBundle\Topic\TopicInterface;
 use PlanningBundle\Services\SessionManager;
 use Ratchet\ConnectionInterface;
 use Ratchet\Wamp\Topic;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Class RevelationTopic
@@ -36,7 +40,6 @@ class RevelationTopic implements TopicInterface
      */
     public function onSubscribe(ConnectionInterface $connection, Topic $topic, WampRequest $request)
     {
-        dump(count($topic));
     }
 
     /**
@@ -46,7 +49,6 @@ class RevelationTopic implements TopicInterface
      */
     public function onUnSubscribe(ConnectionInterface $connection, Topic $topic, WampRequest $request)
     {
-
     }
 
     /**
@@ -65,6 +67,8 @@ class RevelationTopic implements TopicInterface
         array $exclude,
         array $eligible
     ) {
+        $response = array();
+
         $session = $this->session_manager->hasSession($connection->resourceId);
         $sessionCount = $session->getPlanningGroup()->getSessions()->count();
 
@@ -75,12 +79,17 @@ class RevelationTopic implements TopicInterface
                     $selected++;
                 }
             }
+            $response['group_token'] = $session->getPlanningGroup()->getToken();
+            $response['card_id'] = (!is_null($session->getSelectedCard())) ? $session->getSelectedCard()->getId() : null;
+            $response['reveal'] = $selected == $sessionCount;
+            if (true == $response['reveal']) {
+                $response['cards'] = array();
+                foreach ($session->getPlanningGroup()->getSessions() as $session) {
+                    $response['cards'][] = $session->getSelectedCard()->getPoints();
+                }
+            }
 
-            $topic->broadcast(array(
-                'group_token' => $session->getPlanningGroup()->getToken(),
-                'card_id' => $session->getSelectedCard()->getId(),
-                'reveal' => ($sessionCount > 1) ? $selected == $sessionCount : false
-            ));
+            $topic->broadcast($response);
         }
     }
 
