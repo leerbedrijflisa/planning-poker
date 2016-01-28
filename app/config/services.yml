@@ -44,3 +44,4 @@ services:
             - '@session_manager'
         tags:
             - { name: kernel.event_listener, event: gos_web_socket.client_disconnected, method: onClientDisconnected }
+            - { name: kernel.event_listener, event: gos_web_socket.server_launched, method: onServerLaunched }

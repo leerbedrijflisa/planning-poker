@@ -1,5 +1,4 @@
 var client = new PPClient(),
-    selected_card,
     group_token = (undefined !== group_token) ? group_token : undefined;
 
 client.onConnect(function (session) {
@@ -7,71 +6,59 @@ client.onConnect(function (session) {
 
     client.joinGroup(session, {'group-token': group_token}, function (res) {
         log('Group joined successfully! Resource Id %s'.replace(/%s/g, res.result.resource_id));
-        session.subscribe('pp/revelation', function (msg, result) {
-            // returns bool if cards have to be revealed
 
-            var card = $('div[data-group-token="' + result.group_token + '"][data-card-id="' + result.card_id + '"]');
-            if (undefined !== selected_card) {
-                $(selected_card)
-                    .removeClass('card-selected');
+        // Listen to the revelation topic
+        session.subscribe('pp/revelation', function (msg, result) {
+            if (true === result.in_reveal_state) {
+                $('.card-selection').html('');
+                $.each(result.selected_cards, function (k, v) {
+                    $('.card-selection').append('<div class="col-md-2 col-xs-4"><div class="panel panel-default card-panel card-selected"><div class="panel-body text-center"><h3>' + v.points + '</h3></div></div></div>');
+                });
+                log('All clients have selected. Revealing cards');
+
+
             }
-            if ($(card).data('card-id') == $(selected_card).data('card-id')) {
-                $(card)
-                    .removeClass('card-selected');
-                card = undefined;
-            }
-            if ($(card).data('card-id') !== $(selected_card).data('card-id')) {
-                $(card)
-                    .addClass('card-selected');
-                selected_card = card;
-            }
-            console.log(result);
-            if (true === result.reveal) {
-                console.log('Reveal cards');
-                //$('.card-selection').fadeOut(1000);
-            }
-            alert('Card action: ' + result.reveal);
         });
 
+        // Click listener for a card panel
         $('.card-panel').click(function () {
-            // on card click
 
-            var _this = $(this),
-                token = $(_this).data('group-token'),
-                card_id = $(_this).data('card-id');
+            var token = $(this).data('group-token'),
+                card_id = $(this).data('card-id');
 
-            session.call('pp/select_card', {'group-token': token, 'card-id': card_id}).then(function (res) {
-                // card selection successfull
+            // Send to the server which card has been selected
+            session.call('pp/select_card', {'group-token': token, 'card-id': card_id}).then(function () {
 
+                // Remove current selection
+                if (undefined !== client.getSelectedCard()) {
+                    $(client.getSelectedCard())
+                        .removeClass('card-selected');
+                }
+
+                // Get the selected card
+                var card = $('div[data-group-token="' + token + '"][data-card-id="' + card_id + '"]');
+
+                // Deselect the selected card if selected again
+                if ($(card).data('card-id') == $(client.getSelectedCard()).data('card-id')) {
+                    $(card).removeClass('card-selected');
+                    card = undefined;
+                }
+
+                // Select a card if that one has not been selected
+                if ($(card).data('card-id') !== $(client.getSelectedCard()).data('card-id')) {
+                    $(card).addClass('card-selected');
+                    client.setSelectedCard(card);
+                }
+
+                // Tell the server to check for card revelations
                 session.publish('pp/revelation', {'msg': 'selection'});
             });
-
         });
     }, function (error) {
         console.error(error.desc);
     });
 });
 
-//var webSocket = WS.connect("ws://127.0.0.1:8000"),
-//    selected_card;
-//
-//webSocket.on("socket/connect", function (session) {
-//    //session is an Autobahn JS WAMP session.
-//
-//    log("Connected to server.");
-//    session.call('pp/join_group', {'group-token': group_token}).then(function (res) {
-//        // successfull group join
-//
-//
-//
-
-//    }, function () {
-//        // Unable to join group
-//
-//        console.error('Unable to join group');
-//    });
-//});
-//
 client.onDisconnect(function (error) {
     console.error('Error: ' + error.reason);
 });

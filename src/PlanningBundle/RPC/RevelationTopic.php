@@ -4,6 +4,7 @@ namespace PlanningBundle\RPC;
 
 use Gos\Bundle\WebSocketBundle\Router\WampRequest;
 use Gos\Bundle\WebSocketBundle\Topic\TopicInterface;
+use PlanningBundle\RPC\Response\RevelationTopicResponse;
 use PlanningBundle\Services\SessionManager;
 use Ratchet\ConnectionInterface;
 use Ratchet\Wamp\Topic;
@@ -67,29 +68,25 @@ class RevelationTopic implements TopicInterface
         array $exclude,
         array $eligible
     ) {
-        $response = array();
 
-        $session = $this->session_manager->hasSession($connection->resourceId);
-        $sessionCount = $session->getPlanningGroup()->getSessions()->count();
+        $response = RevelationTopicResponse::create();
 
-        if (null !== $session) {
-            $selected = 0;
-            foreach ($session->getPlanningGroup()->getSessions() as $uSession) {
-                if (null !== $uSession->getSelectedCard()) {
-                    $selected++;
-                }
-            }
-            $response['group_token'] = $session->getPlanningGroup()->getToken();
-            $response['card_id'] = (!is_null($session->getSelectedCard())) ? $session->getSelectedCard()->getId() : null;
-            $response['reveal'] = $selected == $sessionCount;
-            if (true == $response['reveal']) {
-                $response['cards'] = array();
+        if ($session = $this->session_manager->hasSession($connection->resourceId)) {
+            $activeSessions = $this->session_manager->getActiveSessionsAsync($session->getPlanningGroup());
+            $selectedSessions = $this->session_manager->getSelectedSessionsAsync($session->getPlanningGroup());
+
+            $response
+                ->setGroupToken($session->getPlanningGroup()->getToken())
+                ->setCardId(null !== $session->getSelectedCard() ? $session->getSelectedCard()->getId() : null)
+                ->setInRevealState($activeSessions->count() == $selectedSessions->count());
+
+            if ($response->isInRevealState()) {
                 foreach ($session->getPlanningGroup()->getSessions() as $session) {
-                    $response['cards'][] = $session->getSelectedCard()->getPoints();
+                    $response->addSelectedCard($session->getSelectedCard());
                 }
             }
 
-            $topic->broadcast($response);
+            $topic->broadcast($response->toArray());
         }
     }
 

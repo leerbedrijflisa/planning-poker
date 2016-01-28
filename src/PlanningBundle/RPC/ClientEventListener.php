@@ -3,6 +3,7 @@
 namespace PlanningBundle\RPC;
 
 use Gos\Bundle\WebSocketBundle\Event\ClientEvent;
+use Gos\Bundle\WebSocketBundle\Event\ServerEvent;
 use PlanningBundle\Services\SessionManager;
 
 /**
@@ -32,6 +33,11 @@ class ClientEventListener
         if ($session = $this->session_manager->hasSession($resourceId)) {
             $this->session_manager->removeSession($session);
         }
+    }
+
+    public function onServerLaunched(ServerEvent $event)
+    {
+        $this->session_manager->removeAll();
     }
     
 }

@@ -3,6 +3,9 @@ var PPClient = function () {
 };
 
 $.extend(PPClient.prototype, {
+    data: {
+        selectedCard: null
+    },
 
     onConnect: function (callback) {
         this.webSocket.on("socket/connect", function (session) {
@@ -22,6 +25,16 @@ $.extend(PPClient.prototype, {
         }, function (error, desc) {
             error_callback(error, desc);
         });
+    },
+
+    getSelectedCard: function () {
+        return this.data.selectedCard;
+    },
+
+    setSelectedCard: function (card) {
+        this.data.selectedCard = card;
+
+        return this;
     }
 
 });
