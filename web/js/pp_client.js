@@ -1,5 +1,5 @@
 var PPClient = function () {
-    this.webSocket = WS.connect("ws://127.0.0.1:8000");
+    this.webSocket = WS.connect("ws://" + socket_host + ":" + socket_port);
 };
 
 $.extend(PPClient.prototype, {
