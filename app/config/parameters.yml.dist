@@ -17,4 +17,5 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+    socket_port:       8000
     socket_host:       127.0.0.1
