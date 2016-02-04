@@ -289,4 +289,5 @@ class PlanningGroup
     {
         return $this->sessions;
     }
+
 }

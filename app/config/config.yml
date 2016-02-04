@@ -35,6 +35,8 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    globals:
+        socket_host: %socket_host%
 
 # Assetic Configuration
 assetic:
@@ -83,7 +85,7 @@ swiftmailer:
 # Web Socket Configuration
 gos_web_socket:
     server:
-        port: 8000        #The port the socket server will listen on
+        port: 2222        #The port the socket server will listen on
         host: 127.0.0.1   #The host ip to bind to
         router:
             resources:

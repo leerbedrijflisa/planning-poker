@@ -7,6 +7,7 @@
         {% block stylesheets %}
             {% stylesheets
             'css/*.min.css'
+            'alertifyjs/css/alertify.min.css'
             'css/style.css'
             filter='cssrewrite' %}
             <link rel="stylesheet" href="{{ asset_url }}"/>
@@ -15,6 +16,7 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
     </head>
     <body>
+        <div class="overlay"></div>
         <div class="container">
             <div class="page-header">
                 <h1>{% block pagetitle %}Planning Poker{% endblock %}</h1>
@@ -26,6 +28,9 @@
             'bundles/fosjsrouting/js/router.js'
             'js/jquery-1.11.3.min.js'
             'js/bootstrap.min.js'
+            'alertifyjs/alertify.min.js'
+            'jquery.tmpl.min.js'
+            'jquery.tmplPlus.min.js'
             'js/script.js'
             'bundles/goswebsocket/js/vendor/autobahn.min.js'
             'bundles/goswebsocket/js/gos_web_socket_client.js' %}

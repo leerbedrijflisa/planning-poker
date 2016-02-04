@@ -1,5 +1,18 @@
-i.fa {
+h1 i.fa,
+h2 i.fa,
+h3 i.fa {
     color: #a91a10;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.1);
+    z-index: 99;
 }
 
 .row.card-selection div[class*="col-"] {
@@ -42,8 +55,26 @@ i.fa {
     border-color: #9b1910;
 }
 
+.card-current {
+    background-color: #EC4B4B;
+    border-color: #FF1100;
+}
+
 .card-selected * {
     color: #ffffff;
+}
+
+.alertify-notifier {
+    top: 10px;
+    bottom: auto;
+}
+
+.ajs-error {
+    color: #fff;
+}
+
+.ajs-success{
+    color: #fff;
 }
 
 @media (max-width: 768px ) {

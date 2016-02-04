@@ -21,21 +21,31 @@ class PlanningPokerServer implements RpcInterface, ContainerAwareInterface
     {
         $session = $this->container->get('session_manager')->hasSession($connection->resourceId);
 
-        if (null === $session) {
-            $group = $this->container->get('doctrine')->getRepository('AppBundle:PlanningGroup')->findOneBy(array(
-                'token' => $params['group-token']
-            ));
-            if (null !== $group) {
+        $group = $this->container->get('doctrine')->getRepository('AppBundle:PlanningGroup')->findOneBy(array(
+            'token' => $params['group-token'],
+        ));
+        if (null !== $group) {
+            if (null === $session) {
                 $session = $this->container->get('session_manager')->createSession($group, $connection->resourceId);
-            } else {
-                throw new \RuntimeException(sprintf("Could not join group. Invalid group token '%s'", $params['group-token']));
             }
+        } else {
+            throw new \RuntimeException(
+                sprintf("Kan niet deelnemen aan de groep. Ongeldige groep token '%s'",
+                $params['group-token'])
+            );
         }
 
         return array(
             'result' => array(
-                'resource_id' => $session->getResourceId()
+                'resource_id' => $session->getResourceId(),
             ),
+        );
+    }
+
+    public function fillTicket(ConnectionInterface $connection, WampRequest $request, $params)
+    {
+        return array(
+            'result' => true
         );
     }
 
@@ -51,13 +61,13 @@ class PlanningPokerServer implements RpcInterface, ContainerAwareInterface
 
             return array(
                 'result' => array(
-                    'card_id' => $card->getId()
-                )
+                    'card_id' => $card->getId(),
+                ),
             );
         }
 
         throw new \RuntimeException(
-            sprintf("Card could not be selected")
+            sprintf("Kaart kon niet worden geselecteerd")
         );
     }
 

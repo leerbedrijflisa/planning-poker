@@ -4,14 +4,11 @@ namespace PlanningBundle\RPC;
 
 use Gos\Bundle\WebSocketBundle\Router\WampRequest;
 use Gos\Bundle\WebSocketBundle\Topic\TopicInterface;
+use PlanningBundle\RPC\Response\CardSelection;
 use PlanningBundle\RPC\Response\RevelationTopicResponse;
 use PlanningBundle\Services\SessionManager;
 use Ratchet\ConnectionInterface;
 use Ratchet\Wamp\Topic;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 /**
  * Class RevelationTopic
@@ -68,10 +65,11 @@ class RevelationTopic implements TopicInterface
         array $exclude,
         array $eligible
     ) {
-
         $response = RevelationTopicResponse::create();
 
         if ($session = $this->session_manager->hasSession($connection->resourceId)) {
+            $planningGroup = $session->getPlanningGroup();
+
             $activeSessions = $this->session_manager->getActiveSessionsAsync($session->getPlanningGroup());
             $selectedSessions = $this->session_manager->getSelectedSessionsAsync($session->getPlanningGroup());
 
@@ -80,11 +78,16 @@ class RevelationTopic implements TopicInterface
                 ->setCardId(null !== $session->getSelectedCard() ? $session->getSelectedCard()->getId() : null)
                 ->setInRevealState($activeSessions->count() == $selectedSessions->count());
 
-            if ($response->isInRevealState()) {
-                foreach ($session->getPlanningGroup()->getSessions() as $session) {
-                    $response->addSelectedCard($session->getSelectedCard());
+            foreach ($planningGroup->getSessions() as $session) {
+                if (null !== $session->getSelectedCard()) {
+                    $cardSelection = new CardSelection();
+
+                    $cardSelection->setSession($session);
+                    $cardSelection->setCard($session->getSelectedCard());
+
+                    $response->addSelectedCard($cardSelection);
                 }
-            }
+            };
 
             $topic->broadcast($response->toArray());
         }

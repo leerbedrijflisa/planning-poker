@@ -4,6 +4,7 @@
 
 {% block pagetitle %}
     <i class="fa fa-fw fa-group"></i> {{ group.name }}
+    <small><span class="active-users"></span> gebruikers</small>
 {% endblock %}
 
 {% block body %}
@@ -34,7 +35,8 @@
         <div class="row card-selection">
             {% for card in group.cards %}
                 <div class="col-md-2 col-xs-4">
-                    <div class="panel panel-default card-panel" data-group-token="{{ group.token }}" data-card-id="{{ card.id }}">
+                    <div class="panel panel-default card-panel" data-group-token="{{ group.token }}"
+                         data-card-id="{{ card.id }}">
                         <div class="panel-body text-center">
                             <h3>{{ card.points }}</h3>
                         </div>
@@ -43,12 +45,20 @@
             {% endfor %}
         </div>
     {% endif %}
+    <script id="card-template" type="text/x-custom-template">
+        <div class="col-md-2 col-xs-4">
+            <div class="panel panel-default card-panel ${CardClass}">
+                <div class="panel-body text-center"><h3>${Points}</h3></div>
+            </div>
+        </div>
+    </script>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script>
         var group_token = '{{ group.token }}';
+        var active_ticket = {{ group.hasActiveTicket ? 'true' : 'false' }};
     </script>
     {% javascripts
     'js/pp_client.js'

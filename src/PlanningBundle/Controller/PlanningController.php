@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class PlanningController extends Controller
 {
@@ -34,7 +35,7 @@ class PlanningController extends Controller
             $em->flush();
 
             return $this->redirectToRoute('planning', array(
-                'token' => $group->getToken()
+                'token' => $group->getToken(),
             ));
         }
 
@@ -61,7 +62,7 @@ class PlanningController extends Controller
 
         return new JsonResponse(array(
             'group_token' => $group->getToken(),
-            'card_id' => $card->getId()
+            'card_id'     => $card->getId(),
         ));
     }
 

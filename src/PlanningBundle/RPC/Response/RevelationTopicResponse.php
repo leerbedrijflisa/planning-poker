@@ -2,8 +2,6 @@
 
 namespace PlanningBundle\RPC\Response;
 
-use AppBundle\Entity\Card;
-
 /**
  * Class RevelationTopicResponse
  * @package PlanningBundle\RPC\Response
@@ -27,7 +25,7 @@ class RevelationTopicResponse
     private $in_reveal_state;
 
     /**
-     * @var Card[]
+     * @var CardSelection[]
      */
     private $selected_cards = array();
 
@@ -89,7 +87,15 @@ class RevelationTopicResponse
     }
 
     /**
-     * @return array
+     * @return RevelationTopicResponse
+     */
+    public static function create()
+    {
+        return new self;
+    }
+
+    /**
+     * @return CardSelection[]
      */
     public function getSelectedCards()
     {
@@ -97,18 +103,8 @@ class RevelationTopicResponse
     }
 
     /**
-     * @param Card $card
-     * @return RevelationTopicResponse
-     */
-    public function addSelectedCard(Card $card)
-    {
-        $this->selected_cards[] = $card;
-
-        return $this;
-    }
-
-    /**
-     * @param array $selected_cards
+     * @param CardSelection[] $selected_cards
+     *
      * @return RevelationTopicResponse
      */
     public function setSelectedCards($selected_cards)
@@ -119,11 +115,15 @@ class RevelationTopicResponse
     }
 
     /**
+     * @param CardSelection $cardSelection
+     *
      * @return RevelationTopicResponse
      */
-    public static function create()
+    public function addSelectedCard(CardSelection $cardSelection)
     {
-        return new self;
+        $this->selected_cards[] = $cardSelection;
+
+        return $this;
     }
 
     /**
@@ -132,13 +132,18 @@ class RevelationTopicResponse
     public function toArray()
     {
         $response = array(
-            'group_token'   => $this->group_token,
-            'card_id'       => $this->card_id,
+            'group_token'     => $this->group_token,
+            'card_id'         => $this->card_id,
             'in_reveal_state' => $this->in_reveal_state,
         );
-        foreach ($this->selected_cards as $card) {
+        foreach ($this->selected_cards as $cardSelection) {
             $response['selected_cards'][] = array(
-                'points' => $card->getPoints()
+                'card' => array(
+                    'points' => $cardSelection->getCard()->getPoints(),
+                ),
+                'session' => array(
+                    'resource_id' => $cardSelection->getSession()->getResourceId()
+                )
             );
         }
 
