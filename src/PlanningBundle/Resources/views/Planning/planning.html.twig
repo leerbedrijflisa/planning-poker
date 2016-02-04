@@ -59,8 +59,8 @@
     <script>
         var group_token = '{{ group.token }}';
         var active_ticket = {{ group.hasActiveTicket ? 'true' : 'false' }};
-        var socket_host = {{ socket_host }};
-        var socket_port = {{ socket_port }};
+        var socket_host = '{{ socket_host }}';
+        var socket_port = '{{ socket_port }}';
     </script>
     {% javascripts
     'js/pp_client.js'
