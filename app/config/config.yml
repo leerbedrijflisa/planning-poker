@@ -87,7 +87,7 @@ swiftmailer:
 gos_web_socket:
     server:
         port: %socket_port%        #The port the socket server will listen on
-        host: 127.0.0.1   #The host ip to bind to
+        host: %socket_host%%   #The host ip to bind to
         router:
             resources:
                 - "@PlanningBundle/Resources/config/routing.yml"
